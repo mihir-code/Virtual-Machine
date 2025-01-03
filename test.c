@@ -4,6 +4,11 @@
 #include <Windows.h>
 #include <conio.h>  // _kbhit
 
+@{Includes}
+@{Registers}
+@{Condition Flags}
+@{Opcodes}
+
 enum
 {
     R_R0 = 0,
