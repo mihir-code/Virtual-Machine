@@ -37,6 +37,11 @@ enum{
     OP_LEA,
     OP_TRP
 };
+enum{
+    FL_POS = 1 << 0, //Postive check//
+    FL_ZRO = 1 << 1, // Zero Check //
+    FL_NEG = 1 << 2, // Negative Check //
+}
 
 
 int main(int argc, const char* argv[]){
@@ -47,3 +52,4 @@ int main(int argc, const char* argv[]){
 
 #define MEMORY_MAX(1 << 16)
 uint16_t memory[MEMORY_MAX]; /* There are around 65536, think binary*/
+uint16_t reg[R_COUNT];
