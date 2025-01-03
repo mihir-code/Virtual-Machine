@@ -43,6 +43,12 @@ enum{
     FL_NEG = 1 << 2, // Negative Check //
 }
 
+unint16_t sign_extend(unint16_t x, int bit_count){
+    if((x>>(bit_count-1))&1){
+        x |=(0xFFFF << bit_count);
+    }
+    return x;
+}
 
 int main(int argc, const char* argv[]){
     if (argc < 2){
