@@ -1,13 +1,4 @@
 #include <stdio.h>
-#include <stdint.h>
-/* windows only */
-#include <Windows.h>
-#include <conio.h>  // _kbhit
-
-@{Includes}
-@{Registers}
-@{Condition Flags}
-@{Opcodes}
 
 enum
 {
@@ -24,25 +15,6 @@ enum
     R_COUNT
 };
 
-enum{
-    OP_BR = 0,
-    OP_ADD,
-    OP_LD,
-    OP_ST,
-    OP_JSR,
-    OP_AND,
-    OP_LDR,
-    OP_STR,
-    OP_RTI,
-    OP_NOT,
-    OP_LDI,
-    OP_STI,
-    OP_JMP,
-    OP_RES,
-    OP_LEA,
-    OP_TRP
-};
-
 
 int main(int argc, const char* argv[]){
     printf("hello");
@@ -51,4 +23,4 @@ int main(int argc, const char* argv[]){
 }
 
 #define MEMORY_MAX(1 << 16)
-uint16_t memory[MEMORY_MAX]; /* There are around 65536, think binary*/
+uint16_t memory[MEMORY_MAX] 
