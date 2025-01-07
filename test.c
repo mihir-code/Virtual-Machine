@@ -111,7 +111,7 @@ int main(int argc, const char* argv[]){
             case OP_LDI:
                 {
                 /* destination register (DR) */
-                unint16_t r0 = (instr >>  9) & 0x7;
+                uint16_t r0 = (instr >>  9) & 0x7;
                 /* PC offset 9*/
                 uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
                 /*adds offset, look at location to get memory address*/
