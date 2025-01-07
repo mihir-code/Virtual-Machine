@@ -104,6 +104,15 @@ int main(int argc, const char* argv[]){
                 break;
             case OP_LDI:
                 @{LDI}
+                {
+                /* destination register (DR) */
+                unint16_t r0 = (instr >>  9) & 0x7;
+                /* PC offset 9*/
+                uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+                /*adds offset, look at location to get memory address*/
+                reg[r0] = mem_read(mem_read(reg[R_PC]+pc_offset));
+                update_flags(r0);
+                }
                 break;
             case OP_LDR:
                 @{LDR}
