@@ -172,12 +172,3 @@ void update_flags(uint16_t r){
 
     update_flags(r0);
 }
-
-{
-    /* this is a register and is the destination*/
-    uint16_t r0 = (instr >> 9) & 0x7;
-
-    uint16_t r1 = ()
-
- 
-}
