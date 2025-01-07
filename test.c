@@ -110,15 +110,21 @@ int main(int argc, const char* argv[]){
                 break;
             case OP_NOT:
                 {
-                uint16_t r0 = (instr >> 9)&0x7;
-                uint16_t r1 = (instr >> 6)&0x7;
+                uint16_t r0 = (instr >> 9) & 0x7;
+                uint16_t r1 = (instr >> 6) & 0x7;
                 
                 reg[r0] = ~ reg[r1];
                 update_flags(r0);
                 }
                 break;
             case OP_BR:
-                @{BR}
+                {
+                    uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+                    uint16_t cond_flag = (instr << 9) & 0x7;
+                    if(cond_flag & reg[R_COND]){
+                        reg[R_PC] += pc_offset;
+                    }
+                }
                 break;
             case OP_JMP:
                 @{JMP}
