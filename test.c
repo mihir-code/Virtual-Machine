@@ -4,6 +4,16 @@
 #include <Windows.h>
 #include <conio.h>  // _kbhit
 
+
+
+/*
+    Bits (11-9): identify a destination register
+    Bits (8-6): used for source registers
+    Bits (5-0): bootleg/extra
+
+*/
+
+// trap code is a very common repeatable process, this is system specific, opcode is general purpose
 enum
 {
     R_R0 = 0,
@@ -37,11 +47,11 @@ enum{
     OP_LEA,
     OP_TRP
 };
-enum{
+enum{ 
     FL_POS = 1 << 0, //Postive check//
     FL_ZRO = 1 << 1, // Zero Check //
     FL_NEG = 1 << 2, // Negative Check //
-}
+};
 
 unint16_t sign_extend(unint16_t x, int bit_count){
     if((x>>(bit_count-1))&1){
@@ -49,6 +59,15 @@ unint16_t sign_extend(unint16_t x, int bit_count){
     }
     return x;
 }
+enum{
+    TRAP_GETC = 0x20,
+    TRAP_OUT = 0x21,
+    TRAP_PUTS = 0x22, 
+    TRAP_IN = 0x23,
+    TRAP_PUTSP = 0x24,
+    TRAP_HALT = 0x25,
+
+};
 
 int main(int argc, const char* argv[]){
     if (argc < 2){
@@ -210,10 +229,19 @@ int main(int argc, const char* argv[]){
                 }
                 break;
             case OP_STI:
-                @{STI}
+                {
+                    uint16_t r0 = (instr >> 9) & 0x7;
+                    uint16_t pc_offset = sign_extend(instr & 0x1FF, 9);
+                    mem_write(mem_read(reg[R_PC] + pc_offset), reg[r0]);
+                }
                 break;
             case OP_STR:
-                @{STR}
+                {
+                    uint16_t r0 = (instr >> 9) & 0x7; // destination
+                    uint16_t r1 = (instr >> 6) & 0x7; // source
+                    uint16_t offset = sign_extend(instr & 0x3F, 6);
+                    mem_write(reg[r1] + offset, reg[r0]);
+                }
                 break;
             case OP_TRAP:
                 @{TRAP}
