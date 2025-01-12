@@ -244,7 +244,39 @@ int main(int argc, const char* argv[]){
                 }
                 break;
             case OP_TRAP:
-                @{TRAP}
+                {
+                    reg[R_R7] = reg[R_PC];
+                    switch (instr & 0xFF){
+                        case TRAP_GETC:
+                            { // reads ASCI
+                                reg[R_RO] = (uint16_t) getchar();
+                                update_flags(R_RO);
+                            }
+                            break;
+                        case TRAP_OUT:
+                            {
+                                putc((char)reg[R_RO], stdout);
+                                fflush(stdout);
+                            }
+                            break;
+                        case TRAP_PUTS:
+                            break;
+                        case TRAP_IN:
+                            break;
+                        case TRAP_PUTSP:
+                            {   // reads one character
+                                uint16_t* c = memory + reg[R_RO]; // *c is a pointer that points to the c variable
+                                while (*c){
+                                    putc((char) *c, stdout); // puts the c in stdout -> system.out.print()
+                                    ++c;
+                                }
+                                fflush(stdout); // sends it to stdout.                            
+                            }
+                            break;
+                        case TRAP_HALT:
+                            break;
+                    }    
+                }
                 break;
             case OP_RES:
             case OP_RTI:
