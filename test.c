@@ -317,6 +317,25 @@ int main(int argc, const char* argv[]){
 uint16_t memory[MEMORY_MAX]; /* There are around 65536, think binary*/
 uint16_t reg[R_COUNT];
 
+void read_image_file(FILE* file){
+    /* we care about the first 16 bits, tells us where in memory the program should start*/
+    uint16_t origin; // memory address for start
+    fread(&origin, sizeof(origin), 1, file);
+    origin = swap16(origin);
+
+    /* we know the maximum file size so we only need one fread */
+    uint16_t max_read = MEMORY_MAX - origin;
+    uint16_t* p = memory + origin;
+    size_t read = fread(p, sizeof(uint16_t), max_read, file);
+
+    /* swap to little endian */
+    // endian is byte order 
+    while (read-- > 0)
+    {
+        *p = swap16(*p);
+        ++p;
+    }
+}
 void update_flags(uint16_t r){
     if(reg[r] == 0)
     {
