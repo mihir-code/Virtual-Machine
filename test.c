@@ -260,10 +260,6 @@ int main(int argc, const char* argv[]){
                             }
                             break;
                         case TRAP_PUTS:
-                            break;
-                        case TRAP_IN:
-                            break;
-                        case TRAP_PUTSP:
                             {   // reads one character
                                 uint16_t* c = memory + reg[R_RO]; // *c is a pointer that points to the c variable
                                 while (*c){
@@ -273,7 +269,36 @@ int main(int argc, const char* argv[]){
                                 fflush(stdout); // sends it to stdout.                            
                             }
                             break;
+                        case TRAP_IN:
+                            { // enter a character
+                                printf("Enter a character: ");
+                                char c = getchar();
+                                putc(c, stdout);
+                                fflush(stdout);
+                                reg[R_RO] = (uint16_t)c;
+                                update_flags(R_RO);
+                            }
+                            break;
+                        case TRAP_PUTSP:
+                            { // one char per byte
+                                uint16_t* c = memory + reg[R_RO];
+                                while (*c){ // while the pointer is active
+                                    char char1 = (*c) & 0xFF;
+                                    putc(char1, stdout);
+                                    char char2 = (*x) >> 8;
+                                    if (char2) putc(char2, stdout);
+                                    ++c;
+                                }
+                                fflush(stdout);
+                                
+                            }
+                            break;
                         case TRAP_HALT:
+                            {
+                                puts("HALT");
+                                fflush(stdout);
+                                running = 0;
+                            }
                             break;
                     }    
                 }
