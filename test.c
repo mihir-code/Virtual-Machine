@@ -329,6 +329,8 @@ void read_image_file(FILE* file){
     size_t read = fread(p, sizeof(uint16_t), max_read, file);
 
     /* swap to little endian */
+    // little endian means the least significant byte is stored first
+    // big endian has the most important byte stored first
     // endian is byte order 
     while (read-- > 0)
     {
@@ -389,3 +391,21 @@ void update_flags(uint16_t r){
     }
     update_flags(r0);
 }
+
+ // to follow lil endian format, we need to shift the first 8 bytes left and then shift 
+uint16_t swap(uint16_t x){
+    return (x << 8) | (x >> 8);
+    // shift the original x left 8 bits
+    // shift original x right 8 bits
+    // combine with the | operator
+}
+
+int read_image(const char* image_path){
+    FILE* file = fopen(image_path, "rb"); // "rb" says that the file will be read
+    if(!file) {return 0;}; // makes sure the program doesnt crash due to a pointer dereferncing
+    read_image_file(file);
+    fclose(file);
+    return 1;
+}
+
+
