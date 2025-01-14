@@ -69,6 +69,10 @@ enum{
 
 };
 
+enum{
+    MR_KBSR = 0xFE00, // keyboard status, register, whether a key is pressed
+    MR_KBDR = 0xFE02 // keyboard data, register, where a key is pressed
+};
 int main(int argc, const char* argv[]){
     if (argc < 2){
         /*show usage string */
@@ -189,7 +193,7 @@ int main(int argc, const char* argv[]){
                 {
                     uint16_t r0 = (instr >> 9) & 0x7;
                     uint16_t pc_offsett = sign_extend(instr & 0x1FF, 9);
-                    reg[r0] = mem_read(reg[R_PC] + pc_offset);
+                    reg[r0] = mem_read(reg[R_PC] + pc_offset); // reads from program counter
                     update_flags(r0);
                 }
                 break;
@@ -209,7 +213,7 @@ int main(int argc, const char* argv[]){
                     uint16_t r0 = (instr >> 9) & 0x7;
                     uint16_t r1 = (instr >> 6) & 0x7;
                     uint16_t offset = sign_extend(inst & 0x3F, 6);
-                    reg[r0] = mem_read(reg[r1] + offset);
+                    reg[r0] = mem_read(reg[r1] + offset); // reads from register
                     update_flags(r0);
                 }
                 break;
@@ -304,7 +308,13 @@ int main(int argc, const char* argv[]){
                 }
                 break;
             case OP_RES:
+            {
+                abort();
+            }
             case OP_RTI:
+            {
+                abort();
+            }
             default:
                 @{BAD OPCODE}
                 break;
