@@ -52,6 +52,22 @@ enum{
     FL_ZRO = 1 << 1, // Zero Check //
     FL_NEG = 1 << 2, // Negative Check //
 };
+void mem_write(uint16_t address, uint16_t val){
+    memory[address] = val;
+}
+
+uint16_t mem_read(uint16_t adresses){
+    if (adressess == MR_KBSR){
+        if (check_key()){
+            memory[MR_KBSR] = (1 << 15);
+            memory[MR_KBDR] = getchar();
+        }
+        else{
+            memory[MR_KBDR] = 0;
+        }
+    }
+    return memory[adresses];
+}
 
 unint16_t sign_extend(unint16_t x, int bit_count){
     if((x>>(bit_count-1))&1){
@@ -419,5 +435,6 @@ int read_image(const char* image_path){
     fclose(file);
     return 1;
 }
+
 
 
