@@ -85,7 +85,9 @@ int main(int argc, const char* argv[]){
             exit(1);
         }
     }
-    @{Load Arguments}
+    @{Load Arguments}    
+    signal(SIGINT, handle_interrupt);
+    disable_input_buffering();
     @{Setup}
     /* setting the Z flag since it's positive */
     reg[R_COND] = FL_ZRO;
