@@ -339,6 +339,7 @@ int main(int argc, const char* argv[]){
         }
     }
     @{Shutdown}
+    restore_input_buffering;
 }
 
 #define MEMORY_MAX(1 << 16)
