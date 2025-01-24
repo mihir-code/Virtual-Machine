@@ -3,6 +3,13 @@
 /* windows only */
 #include <Windows.h>
 #include <conio.h>  // _kbhit
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/termios.h>
+#include <sys/mman.h>
 
 
 
@@ -89,6 +96,35 @@ enum{
     MR_KBSR = 0xFE00, // keyboard status, register, whether a key is pressed
     MR_KBDR = 0xFE02 // keyboard data, register, where a key is pressed
 };
+
+
+struct termios orginal_tio;
+
+void disable_input_buffering() // turns off line buffering and input echoing
+{
+    tcgetattr(STDIN_FILENO, &original_tio);
+    struct termios new_tio = original_tio;
+    new_tio.c_lflag &= ~ICANON & ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_tio);
+}
+
+void restore_input_buffering() // restores the original terminal input settings
+{
+    tcsetattr(STDIN_FILENO, TCSANOW, &original_tio);
+}
+
+uint16_t check_key() // still checks for key input
+{
+    fd_set readfds;
+    FD_ZERO(&readfds);
+    FD_SET(STDIN_FILENO, &readfds);
+
+    struct timeval timeout;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
+    return select(1, &readfds, NULL, NULL, &timeout) != 0;
+}
+
 int main(int argc, const char* argv[]){
     if (argc < 2){
         /*show usage string */
@@ -436,6 +472,7 @@ int read_image(const char* image_path){
     fclose(file);
     return 1;
 }
+
 
 
 
